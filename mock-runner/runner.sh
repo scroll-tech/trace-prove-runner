@@ -23,7 +23,7 @@ for job in $worker_jobs; do
   # extract filename from job path
   # eg. 'hermez-traces/uniswapv2-router-benchmark_0.json' -> 'uniswapv2-router-benchmark_0'
   name=$(echo "$job" | sed 's/.*\///' | sed 's/\.[^.]*$//')
-  trace-prover "$job" --output "$OUTPUT_PATH/$name-result.json"
+  mock-runner "$job" --output "$OUTPUT_PATH/$name-result.json"
 done
 
 echo done > /tmp/worker-done
