@@ -3,7 +3,6 @@ FROM scrolltech/go-rust-builder:go-1.19-rust-nightly-2022-12-10 as builder
 COPY rust-toolchain /rust-toolchain
 COPY .cargo /.cargo
 COPY Cargo.toml /Cargo.toml
-COPY Cargo.lock /Cargo.lock
 COPY src /src
 RUN cargo build --release --bin mock-runner
 RUN cp `find ./target/release/ | grep libzktrie.so` /usr/lib/
