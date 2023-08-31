@@ -26,4 +26,4 @@ for job in $worker_jobs; do
   trace-prover "$job" --output "$OUTPUT_PATH/$name-result.json"
 done
 
-touch /tmp/worker-done
+echo done > /tmp/worker-done
