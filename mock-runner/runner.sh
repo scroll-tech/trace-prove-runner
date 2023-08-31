@@ -2,7 +2,11 @@
 
 set -ex
 
-JOB_FILE=${JOB_FILE:"traces.txt"}
+TRACES_PATH=${TRACES_PATH:="/tmp/traces"}
+if [[ -z "${JOB_FILE}" ]]; then
+  ls $TRACES_PATH/*.json > /tmp/traces.txt
+  JOB_FILE="/tmp/traces.txt"
+fi
 TOTAL_JOBS=$(wc -l < $JOB_FILE)
 TOTAL_WORKERS=${TOTAL_WORKERS:10}
 JOB_COUNT_PER_WORKER=$(( TOTAL_JOBS / TOTAL_WORKERS ))
@@ -21,3 +25,5 @@ for job in $worker_jobs; do
   name=$(echo "$job" | sed 's/.*\///' | sed 's/\.[^.]*$//')
   trace-prover "$job" --output "$OUTPUT_PATH/$name-result.json"
 done
+
+touch /tmp/worker-done
