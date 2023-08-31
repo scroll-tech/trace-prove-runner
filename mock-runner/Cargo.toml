@@ -1,0 +1,103 @@
+[package]
+name = "mock-runner"
+edition = "2021"
+version = "0.1.0"
+
+[dependencies]
+clap = "3"
+serde_json = "1.0"
+tracing = "0.1"
+
+[dependencies.aggregator]
+git = "https://github.com/scroll-tech/zkevm-circuits.git"
+rev = "b0b58df3b91ec68cb17c908abfc44361b4b86460"
+features = []
+
+[dependencies.bus-mapping]
+git = "https://github.com/scroll-tech/zkevm-circuits.git"
+rev = "b0b58df3b91ec68cb17c908abfc44361b4b86460"
+features = []
+
+[dependencies.eth-types]
+git = "https://github.com/scroll-tech/zkevm-circuits.git"
+rev = "b0b58df3b91ec68cb17c908abfc44361b4b86460"
+features = []
+
+[dependencies.external-tracer]
+git = "https://github.com/scroll-tech/zkevm-circuits.git"
+rev = "2058695e56f136424201d7ad30e2c7f6cf9919a6"
+features = []
+
+[dependencies.halo2_proofs]
+git = "https://github.com/privacy-scaling-explorations/halo2.git"
+tag = "v2023_02_02"
+features = []
+
+[dependencies.hex]
+version = "0.4"
+features = ["serde"]
+
+[dependencies.mock]
+git = "https://github.com/scroll-tech/zkevm-circuits.git"
+rev = "b0b58df3b91ec68cb17c908abfc44361b4b86460"
+features = []
+
+[dependencies.serde]
+version = "1.0"
+features = ["derive"]
+
+[dependencies.tracing-subscriber]
+version = "0.3"
+features = ["env-filter"]
+
+[dependencies.zkevm-circuits]
+git = "https://github.com/scroll-tech/zkevm-circuits.git"
+rev = "b0b58df3b91ec68cb17c908abfc44361b4b86460"
+features = ["test"]
+default-features = false
+
+[features]
+default = ["shanghai", "scroll"]
+scroll = ["bus-mapping/scroll", "eth-types/scroll", "external-tracer/scroll", "mock/scroll", "zkevm-circuits/scroll"]
+shanghai = ["bus-mapping/shanghai", "eth-types/shanghai", "mock/shanghai", "zkevm-circuits/shanghai"]
+
+[patch.crates-io.ethers-core]
+git = "https://github.com/scroll-tech/ethers-rs.git"
+branch = "v0.17.0"
+features = []
+
+[patch.crates-io.ethers-signers]
+git = "https://github.com/scroll-tech/ethers-rs.git"
+branch = "v0.17.0"
+features = []
+
+[patch."https://github.com/privacy-scaling-explorations/halo2.git".halo2_proofs]
+git = "https://github.com/scroll-tech/halo2.git"
+branch = "develop"
+features = []
+
+[patch."https://github.com/privacy-scaling-explorations/halo2curves.git".halo2curves]
+git = "https://github.com/scroll-tech/halo2curves.git"
+branch = "0.3.1-derive-serde"
+features = []
+
+[patch."https://github.com/privacy-scaling-explorations/halo2wrong.git".halo2wrong]
+git = "https://github.com/scroll-tech/halo2wrong.git"
+branch = "halo2-ecc-snark-verifier-0323"
+features = []
+
+[patch."https://github.com/privacy-scaling-explorations/halo2wrong.git".maingate]
+git = "https://github.com/scroll-tech/halo2wrong"
+branch = "halo2-ecc-snark-verifier-0323"
+features = []
+
+[patch."https://github.com/privacy-scaling-explorations/poseidon.git".poseidon]
+git = "https://github.com/scroll-tech/poseidon.git"
+branch = "scroll-dev-0220"
+features = []
+
+[[bin]]
+path = "src/main.rs"
+name = "mock-runner"
+edition = "2021"
+required-features = []
