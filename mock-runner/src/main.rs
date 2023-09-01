@@ -113,7 +113,7 @@ fn main() {
                     verify_failures: None,
                 })
                 .unwrap(),
-            )
+            ).unwrap();
         }
     }
 }
