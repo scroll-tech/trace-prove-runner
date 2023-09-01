@@ -25,7 +25,12 @@ features = []
 
 [dependencies.external-tracer]
 git = "https://github.com/scroll-tech/zkevm-circuits.git"
-rev = "2058695e56f136424201d7ad30e2c7f6cf9919a6"
+rev = "b0b58df3b91ec68cb17c908abfc44361b4b86460"
+features = []
+
+[dependencies.geth-utils]
+git = "https://github.com/scroll-tech/zkevm-circuits.git"
+rev = "b0b58df3b91ec68cb17c908abfc44361b4b86460"
 features = []
 
 [dependencies.halo2_proofs]

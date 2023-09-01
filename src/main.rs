@@ -2,15 +2,6 @@ use cargo_toml::{Dependency, Manifest};
 use clap::{Arg, ArgAction, Command};
 use std::fs::write;
 
-const CIRCUITS_PARTS: &[&str] = &[
-    "aggregator",
-    "bus-mapping",
-    "eth-types",
-    "zkevm-circuits",
-    "mpt-zktrie",
-    "mock",
-];
-
 fn main() {
     let args = Command::new("runner-builder")
         .arg(
@@ -39,10 +30,12 @@ fn main() {
         )
         .get_matches();
     let mut manifest = Manifest::from_path("mock-runner/Cargo.toml").unwrap();
-    for part in CIRCUITS_PARTS.iter() {
-        if let Some(Dependency::Detailed(dep)) = manifest.dependencies.get_mut(*part) {
-            dep.branch = None;
-            dep.rev = Some(args.get_one::<String>("circuits-rev").unwrap().clone());
+    for dep in manifest.dependencies.values_mut() {
+        if let Dependency::Detailed(dep) = dep {
+            if let Some("https://github.com/scroll-tech/zkevm-circuits.git") = dep.git.as_deref() {
+                dep.branch = None;
+                dep.rev = Some(args.get_one::<String>("circuits-rev").unwrap().clone());
+            }
         }
     }
 

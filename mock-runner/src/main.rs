@@ -96,13 +96,26 @@ fn main() {
             )
         });
     info!("testing trace: {}", path.display());
-    let block_trace: BlockTrace =
-        serde_json::from_str(&std::fs::read_to_string(path).unwrap()).unwrap();
-    let block_test = BlockTest::new(block_trace, CircuitsParams::super_circuit_params());
-    let k = *args.get_one::<u32>("k").unwrap();
-    let result = run_prover(k, &block_test.block);
+    match serde_json::from_str(&std::fs::read_to_string(path).unwrap()) {
+        Ok(block_trace) => {
+            let block_test = BlockTest::new(block_trace, CircuitsParams::super_circuit_params());
+            let k = *args.get_one::<u32>("k").unwrap();
+            let result = run_prover(k, &block_test.block);
 
-    std::fs::write(output, serde_json::to_string(&result).unwrap()).unwrap();
+            std::fs::write(output, serde_json::to_string(&result).unwrap()).unwrap();
+        }
+        Err(e) => {
+            std::fs::write(
+                output,
+                serde_json::to_string(&ProveResult {
+                    success: false,
+                    error: Some(format!("{:?}", e)),
+                    verify_failures: None,
+                })
+                .unwrap(),
+            )
+        }
+    }
 }
 
 fn run_prover(k: u32, block: &Block<Fr>) -> ProveResult {
