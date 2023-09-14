@@ -1,3 +1,5 @@
 /target
 /mock-runner/target
 /mock-runner/Cargo.lock
+/worker/target
+/worker/Cargo.lock
