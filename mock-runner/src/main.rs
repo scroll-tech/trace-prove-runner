@@ -101,8 +101,9 @@ fn main() {
     fs::create_dir_all(success_out_dir.as_path()).expect("cannot create success output dir");
     fs::create_dir_all(failure_out_dir.as_path()).expect("cannot create failure output dir");
     info!("testing trace: {}", path.display());
-    match serde_json::from_str(&std::fs::read_to_string(path).unwrap()) {
-        Ok(block_trace) => {
+    match serde_json::from_str::<BlockTrace>(&fs::read_to_string(path).unwrap()) {
+        Ok(mut block_trace) => {
+            block_trace.chain_id = 0x1;
             let block_test = BlockTest::new(block_trace, CircuitsParams::super_circuit_params());
             let k = *args.get_one::<u32>("k").unwrap();
             let result = run_prover(k, &block_test.block);
