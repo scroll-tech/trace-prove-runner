@@ -72,12 +72,11 @@ fn main() {
             .file_stem()
             .expect("cannot get file name")
             .to_string_lossy();
-        let output_file = output_path.join(format!("{}-result.json", trace_name));
         info!("running job {}/{}: {}", idx + 1, all_jobs.len(), trace_name);
         let task = std::process::Command::new(runner_path.as_path())
             .arg(job.as_path())
             .arg("--output")
-            .arg(output_file.as_path())
+            .arg(output_path.as_path())
             .stdout(std::process::Stdio::piped())
             .stderr(std::process::Stdio::piped())
             .spawn()
