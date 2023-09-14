@@ -14,7 +14,7 @@ ENV RUST_LOG=info
 ENV RUNNER_PATH=/usr/local/bin/mock-runner
 ENV OUTPUT_PATH=/srv/tracetest/output
 COPY --from=builder /worker/target/release/worker /usr/local/bin/
-COPY --from=builder /target/release/mock-runner /usr/local/bin/
+COPY --from=builder /mock-runner/target/release/mock-runner /usr/local/bin/
 COPY --from=builder /usr/lib/libzktrie.so /usr/lib/
 
 ENTRYPOINT ["/usr/local/bin/worker"]
