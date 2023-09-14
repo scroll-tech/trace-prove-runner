@@ -5,7 +5,7 @@ RUN cd /worker && cargo build --release
 COPY mock-runner /mock-runner
 RUN cd /mock-runner && \
     cargo build --release --bin mock-runner && \
-    cp `find ./target/release/ | grep libzktrie.so` /usr/lib/ \
+    cp `find ./target/release/ | grep libzktrie.so` /usr/lib/
 
 FROM ubuntu:20.04
 
