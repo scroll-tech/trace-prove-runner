@@ -81,6 +81,7 @@ fn main() {
             Arg::new("output")
                 .required(true)
                 .long("output")
+                .value_parser(clap::value_parser!(PathBuf))
                 .action(ArgAction::Set),
         )
         .arg(
