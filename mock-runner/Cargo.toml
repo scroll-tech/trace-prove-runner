@@ -10,27 +10,27 @@ tracing = "0.1"
 
 [dependencies.aggregator]
 git = "https://github.com/scroll-tech/zkevm-circuits.git"
-rev = "b0b58df3b91ec68cb17c908abfc44361b4b86460"
+rev = "b99974d2d37696562a1035c0e595dbc87fabaa62"
 features = []
 
 [dependencies.bus-mapping]
 git = "https://github.com/scroll-tech/zkevm-circuits.git"
-rev = "b0b58df3b91ec68cb17c908abfc44361b4b86460"
+rev = "b99974d2d37696562a1035c0e595dbc87fabaa62"
 features = []
 
 [dependencies.eth-types]
 git = "https://github.com/scroll-tech/zkevm-circuits.git"
-rev = "b0b58df3b91ec68cb17c908abfc44361b4b86460"
+rev = "b99974d2d37696562a1035c0e595dbc87fabaa62"
 features = []
 
 [dependencies.external-tracer]
 git = "https://github.com/scroll-tech/zkevm-circuits.git"
-rev = "b0b58df3b91ec68cb17c908abfc44361b4b86460"
+rev = "b99974d2d37696562a1035c0e595dbc87fabaa62"
 features = []
 
 [dependencies.geth-utils]
 git = "https://github.com/scroll-tech/zkevm-circuits.git"
-rev = "b0b58df3b91ec68cb17c908abfc44361b4b86460"
+rev = "b99974d2d37696562a1035c0e595dbc87fabaa62"
 features = []
 
 [dependencies.halo2_proofs]
@@ -44,7 +44,7 @@ features = ["serde"]
 
 [dependencies.mock]
 git = "https://github.com/scroll-tech/zkevm-circuits.git"
-rev = "b0b58df3b91ec68cb17c908abfc44361b4b86460"
+rev = "b99974d2d37696562a1035c0e595dbc87fabaa62"
 features = []
 
 [dependencies.serde]
@@ -57,7 +57,7 @@ features = ["env-filter"]
 
 [dependencies.zkevm-circuits]
 git = "https://github.com/scroll-tech/zkevm-circuits.git"
-rev = "b0b58df3b91ec68cb17c908abfc44361b4b86460"
+rev = "b99974d2d37696562a1035c0e595dbc87fabaa62"
 features = ["test"]
 default-features = false
 
@@ -68,12 +68,12 @@ shanghai = ["bus-mapping/shanghai", "eth-types/shanghai", "mock/shanghai", "zkev
 
 [patch.crates-io.ethers-core]
 git = "https://github.com/scroll-tech/ethers-rs.git"
-branch = "v0.17.0"
+branch = "v2.0.7"
 features = []
 
 [patch.crates-io.ethers-signers]
 git = "https://github.com/scroll-tech/ethers-rs.git"
-branch = "v0.17.0"
+branch = "v2.0.7"
 features = []
 
 [patch."https://github.com/privacy-scaling-explorations/halo2.git".halo2_proofs]
