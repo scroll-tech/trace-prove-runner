@@ -23,6 +23,7 @@ fn main() {
     tracing_subscriber::fmt()
         .with_env_filter(EnvFilter::builder().from_env_lossy())
         .with_writer(appender)
+        .with_ansi(false)
         .init();
     info!("output path: {}", output_path.display());
 
