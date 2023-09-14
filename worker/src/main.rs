@@ -13,7 +13,8 @@ fn main() {
     let output_path: PathBuf = var("OUTPUT_PATH")
         .map(PathBuf::from)
         .expect("OUTPUT_PATH not set");
-    fs::create_dir_all(output_path.as_path()).expect("cannot create output dir");
+    let runner_log_path = output_path.join(format!("worker-{}", worker_index));
+    fs::create_dir_all(runner_log_path.as_path()).expect("cannot create output dir");
 
     let appender = tracing_appender::rolling::never(
         output_path.as_path(),
@@ -77,17 +78,20 @@ fn main() {
             .arg(job.as_path())
             .arg("--output")
             .arg(output_path.as_path())
-            .stdout(std::process::Stdio::piped())
-            .stderr(std::process::Stdio::piped())
-            .spawn()
-            .and_then(|mut child| child.wait());
+            .output();
         match task {
             Err(e) => {
                 error!("failed to exec task {trace_name}: {:?}", e);
             }
-            Ok(result) => {
-                if !result.success() {
-                    error!("task {trace_name} failed: {:?}", result);
+            Ok(output) => {
+                // write log
+                let log_path = runner_log_path.join(format!("{}.log", trace_name));
+                fs::write(log_path.as_path(), output.stdout).ok();
+                // write error
+                let err_path = runner_log_path.join(format!("{}.err", trace_name));
+                fs::write(err_path.as_path(), output.stderr).ok();
+                if !output.status.success() {
+                    error!("task {trace_name} failed");
                 } else {
                     info!("task {trace_name} finished");
                 }
