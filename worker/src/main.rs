@@ -108,5 +108,6 @@ fn load_jobs(traces_path: &Path) -> Vec<PathBuf> {
             jobs.push(path);
         }
     }
+    jobs.sort();
     jobs
 }
