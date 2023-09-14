@@ -7,6 +7,7 @@ use clap::{Arg, ArgAction, Command};
 use eth_types::l2_types::BlockTrace;
 use halo2_proofs::halo2curves::bn256::Fr;
 use serde::Serialize;
+use std::fs;
 use std::path::PathBuf;
 use tracing_subscriber::EnvFilter;
 use zkevm_circuits::util::SubCircuit;
@@ -76,7 +77,12 @@ fn main() {
 
     let args = Command::new("trace-prover")
         .arg(Arg::new("trace").required(true).action(ArgAction::Set))
-        .arg(Arg::new("output").long("output").action(ArgAction::Set))
+        .arg(
+            Arg::new("output")
+                .required(true)
+                .long("output")
+                .action(ArgAction::Set),
+        )
         .arg(
             Arg::new("k")
                 .short('k')
@@ -86,15 +92,14 @@ fn main() {
         )
         .get_matches();
     let path = PathBuf::from(args.get_one::<String>("trace").unwrap());
-    let output = args
-        .get_one::<String>("output")
+    let output_dir = args
+        .get_one::<PathBuf>("output")
         .cloned()
-        .unwrap_or_else(|| {
-            format!(
-                "{}-result.json",
-                path.file_stem().unwrap().to_str().unwrap()
-            )
-        });
+        .expect("output dir not set");
+    let success_out_dir = output_dir.join("success");
+    let failure_out_dir = output_dir.join("failure");
+    fs::create_dir_all(success_out_dir.as_path()).expect("cannot create success output dir");
+    fs::create_dir_all(failure_out_dir.as_path()).expect("cannot create failure output dir");
     info!("testing trace: {}", path.display());
     match serde_json::from_str(&std::fs::read_to_string(path).unwrap()) {
         Ok(block_trace) => {
@@ -102,18 +107,23 @@ fn main() {
             let k = *args.get_one::<u32>("k").unwrap();
             let result = run_prover(k, &block_test.block);
 
-            std::fs::write(output, serde_json::to_string(&result).unwrap()).unwrap();
+            fs::write(
+                success_out_dir.as_path(),
+                serde_json::to_string(&result).unwrap(),
+            )
+            .unwrap();
         }
         Err(e) => {
-            std::fs::write(
-                output,
+            fs::write(
+                failure_out_dir.as_path(),
                 serde_json::to_string(&ProveResult {
                     success: false,
                     error: Some(format!("{:?}", e)),
                     verify_failures: None,
                 })
                 .unwrap(),
-            ).unwrap();
+            )
+            .unwrap();
         }
     }
 }
