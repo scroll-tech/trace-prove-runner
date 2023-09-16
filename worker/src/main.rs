@@ -60,23 +60,19 @@ fn main() {
 
     let all_jobs = load_jobs(traces_path.as_path());
     info!("total jobs: {}", all_jobs.len());
-    let job_per_worker = (all_jobs.len() + total_workers - 1) / total_workers;
-    info!("jobs per worker: {job_per_worker}");
-    let worker_jobs = all_jobs
-        .chunks(job_per_worker)
-        .skip(worker_index)
-        .next()
-        .expect("impossible")
-        .to_vec();
-    info!("loaded {} jobs to run", worker_jobs.len());
+    let worker_jobs = get_jobs(all_jobs, worker_index, total_workers);
+    let job_count = worker_jobs.len();
+    info!("loaded {job_count} jobs to run");
 
-    for (idx, job) in worker_jobs.into_iter().enumerate() {
-        let idx = idx + worker_index * job_per_worker;
+    for (idx, (origin_idx, job)) in worker_jobs.into_iter().enumerate() {
         let trace_name = job
             .file_stem()
             .expect("cannot get file name")
             .to_string_lossy();
-        info!("running job {}/{}: {}", idx + 1, all_jobs.len(), trace_name);
+        info!(
+            "running job #{origin_idx} {current}/{job_count}: {trace_name}",
+            current = idx + 1
+        );
         let task = std::process::Command::new(runner_path.as_path())
             .arg(job.as_path())
             .arg("--output")
@@ -120,4 +116,17 @@ fn load_jobs(traces_path: &Path) -> Vec<PathBuf> {
     }
     jobs.sort();
     jobs
+}
+
+// balance jobs to workers
+fn get_jobs(
+    all_jobs: Vec<PathBuf>,
+    worker_index: usize,
+    total_workers: usize,
+) -> Vec<(usize, PathBuf)> {
+    all_jobs
+        .into_iter()
+        .enumerate()
+        .filter(|(idx, _)| idx % total_workers == worker_index)
+        .collect()
 }
