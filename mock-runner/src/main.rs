@@ -108,11 +108,19 @@ fn main() {
             let k = *args.get_one::<u32>("k").unwrap();
             let result = run_prover(k, &block_test.block);
 
-            fs::write(
-                success_out_dir.join(path.file_name().unwrap()),
-                serde_json::to_string(&result).unwrap(),
-            )
-            .unwrap();
+            if result.success {
+                fs::write(
+                    success_out_dir.join(path.file_name().unwrap()),
+                    serde_json::to_string(&result).unwrap(),
+                )
+                .unwrap();
+            } else {
+                fs::write(
+                    failure_out_dir.join(path.file_name().unwrap()),
+                    serde_json::to_string(&result).unwrap(),
+                )
+                .unwrap();
+            }
         }
         Err(e) => {
             fs::write(
