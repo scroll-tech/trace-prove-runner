@@ -13,8 +13,10 @@ fn main() {
     let output_path: PathBuf = var("OUTPUT_PATH")
         .map(PathBuf::from)
         .expect("OUTPUT_PATH not set");
-    let runner_log_path = output_path.join(format!("worker-{}", worker_index));
+    let runner_log_path = output_path.join("worker-log");
+    let runner_err_path = output_path.join("worker-err");
     fs::create_dir_all(runner_log_path.as_path()).expect("cannot create output dir");
+    fs::create_dir_all(runner_err_path.as_path()).expect("cannot create output dir");
 
     let appender = tracing_appender::rolling::never(
         output_path.as_path(),
@@ -87,10 +89,14 @@ fn main() {
             Ok(output) => {
                 // write log
                 let log_path = runner_log_path.join(format!("{}.log", trace_name));
-                fs::write(log_path.as_path(), output.stdout).ok();
+                if !output.stdout.is_empty() {
+                    fs::write(log_path.as_path(), output.stdout).ok();
+                }
                 // write error
-                let err_path = runner_log_path.join(format!("{}.err", trace_name));
-                fs::write(err_path.as_path(), output.stderr).ok();
+                let err_path = runner_err_path.join(format!("{}.err", trace_name));
+                if !output.stderr.is_empty() {
+                    fs::write(err_path.as_path(), output.stderr).ok();
+                }
                 if !output.status.success() {
                     error!("task {trace_name} failed");
                 } else {
