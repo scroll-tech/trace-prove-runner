@@ -29,7 +29,7 @@ docker run \
 #### build
 
 ```bash
-git clone -b v0.6.0 https://github.com/scroll-tech/halo2-gpu.git
+git clone -b v0.6.0 git@github.com:scroll-tech/halo2-gpu.git
 cargo run -- --inner-prover --circuits-rev $rev
 docker build -f gpu.Dockerfile -t inner-runner:$rev .
 ```
@@ -56,7 +56,7 @@ docker run \
 #### build
 
 ```bash
-git clone -b v0.6.0 https://github.com/scroll-tech/halo2-gpu.git
+git clone -b v0.6.0 git@github.com:scroll-tech/halo2-gpu.git
 cargo run -- --chunk-prover --circuits-rev $rev
 docker build -f gpu.Dockerfile -t chunk-runner:$rev .
 ```
