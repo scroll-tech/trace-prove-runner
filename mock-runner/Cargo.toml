@@ -10,27 +10,27 @@ tracing = "0.1"
 
 [dependencies.aggregator]
 git = "https://github.com/scroll-tech/zkevm-circuits.git"
-rev = "40f4758f5b4b5a5c82fb312ee58492487f181185"
+rev = "9b7e16b9412ff6b7a55fac6b9c6a943b55ef3718"
 features = []
 
 [dependencies.bus-mapping]
 git = "https://github.com/scroll-tech/zkevm-circuits.git"
-rev = "40f4758f5b4b5a5c82fb312ee58492487f181185"
+rev = "9b7e16b9412ff6b7a55fac6b9c6a943b55ef3718"
 features = []
 
 [dependencies.eth-types]
 git = "https://github.com/scroll-tech/zkevm-circuits.git"
-rev = "40f4758f5b4b5a5c82fb312ee58492487f181185"
+rev = "9b7e16b9412ff6b7a55fac6b9c6a943b55ef3718"
 features = []
 
 [dependencies.external-tracer]
 git = "https://github.com/scroll-tech/zkevm-circuits.git"
-rev = "40f4758f5b4b5a5c82fb312ee58492487f181185"
+rev = "9b7e16b9412ff6b7a55fac6b9c6a943b55ef3718"
 features = []
 
 [dependencies.geth-utils]
 git = "https://github.com/scroll-tech/zkevm-circuits.git"
-rev = "40f4758f5b4b5a5c82fb312ee58492487f181185"
+rev = "9b7e16b9412ff6b7a55fac6b9c6a943b55ef3718"
 features = []
 
 [dependencies.halo2_proofs]
@@ -44,12 +44,12 @@ features = ["serde"]
 
 [dependencies.mock]
 git = "https://github.com/scroll-tech/zkevm-circuits.git"
-rev = "40f4758f5b4b5a5c82fb312ee58492487f181185"
+rev = "9b7e16b9412ff6b7a55fac6b9c6a943b55ef3718"
 features = []
 
 [dependencies.prover]
 git = "https://github.com/scroll-tech/zkevm-circuits.git"
-rev = "40f4758f5b4b5a5c82fb312ee58492487f181185"
+rev = "9b7e16b9412ff6b7a55fac6b9c6a943b55ef3718"
 features = ["parallel_syn", "scroll", "shanghai", "test"]
 optional = true
 
@@ -63,7 +63,7 @@ features = ["env-filter"]
 
 [dependencies.zkevm-circuits]
 git = "https://github.com/scroll-tech/zkevm-circuits.git"
-rev = "40f4758f5b4b5a5c82fb312ee58492487f181185"
+rev = "9b7e16b9412ff6b7a55fac6b9c6a943b55ef3718"
 features = ["test"]
 default-features = false
 
