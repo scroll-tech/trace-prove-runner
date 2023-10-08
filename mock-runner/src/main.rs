@@ -10,7 +10,6 @@ use serde::Serialize;
 use std::fs;
 use std::path::PathBuf;
 use tracing_subscriber::EnvFilter;
-use zkevm_circuits::util::SubCircuit;
 use zkevm_circuits::witness::Block;
 
 mod consts;
@@ -105,8 +104,13 @@ fn main() {
         Ok(mut block_trace) => {
             block_trace.chain_id = 0x1;
             let block_test = BlockTest::new(block_trace, CircuitsParams::super_circuit_params());
-            let k = *args.get_one::<u32>("k").unwrap();
-            let result = run_prover(k, &block_test.block);
+
+            #[cfg(not(any(feature = "inner-prove", feature = "chunk-prove")))]
+            let result = mock_prove(*args.get_one::<u32>("k").unwrap(), &block_test.block);
+            #[cfg(feature = "inner-prove")]
+            let result = inner_prove(&path.to_string_lossy(), &block_test.block);
+            #[cfg(feature = "chunk-prove")]
+            let result = chunk_prove(&path.to_string_lossy(), &block_test.block);
 
             if result.success {
                 fs::write(
@@ -137,7 +141,10 @@ fn main() {
     }
 }
 
-fn run_prover(k: u32, block: &Block<Fr>) -> ProveResult {
+#[cfg(not(any(feature = "inner-prove", feature = "chunk-prove")))]
+fn mock_prove(k: u32, block: &Block<Fr>) -> ProveResult {
+    use zkevm_circuits::util::SubCircuit;
+
     let mut result = ProveResult::default();
     let circuit = zkevm_circuits::super_circuit::SuperCircuit::<
         Fr,
@@ -159,4 +166,45 @@ fn run_prover(k: u32, block: &Block<Fr>) -> ProveResult {
     }
     result.success = true;
     result
+}
+
+#[cfg(feature = "inner-prove")]
+fn inner_prove(test: &str, block: &Block<Fr>) -> ProveResult {
+    match panic_catch(|| prover::test::inner_prove(test, block)) {
+        Ok(_) => ProveResult {
+            success: true,
+            ..Default::default()
+        },
+        Err(err) => ProveResult {
+            error: Some(err),
+            ..Default::default()
+        },
+    }
+}
+
+#[cfg(feature = "chunk-prove")]
+fn chunk_prove(test: &str, block: &Block<Fr>) -> ProveResult {
+    match panic_catch(|| prover::test::chunk_prove(test, block)) {
+        Ok(_) => ProveResult {
+            success: true,
+            ..Default::default()
+        },
+        Err(err) => ProveResult {
+            error: Some(err),
+            ..Default::default()
+        },
+    }
+}
+
+#[cfg(any(feature = "inner-prove", feature = "chunk-prove"))]
+fn panic_catch<F: FnOnce() -> R, R>(f: F) -> Result<R, String> {
+    std::panic::catch_unwind(std::panic::AssertUnwindSafe(f)).map_err(|err| {
+        if let Some(s) = err.downcast_ref::<String>() {
+            s.to_string()
+        } else if let Some(s) = err.downcast_ref::<&str>() {
+            s.to_string()
+        } else {
+            format!("unable to get panic info {err:?}")
+        }
+    })
 }

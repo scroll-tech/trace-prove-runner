@@ -10,27 +10,27 @@ tracing = "0.1"
 
 [dependencies.aggregator]
 git = "https://github.com/scroll-tech/zkevm-circuits.git"
-rev = "b99974d2d37696562a1035c0e595dbc87fabaa62"
+rev = "9b7e16b9412ff6b7a55fac6b9c6a943b55ef3718"
 features = []
 
 [dependencies.bus-mapping]
 git = "https://github.com/scroll-tech/zkevm-circuits.git"
-rev = "b99974d2d37696562a1035c0e595dbc87fabaa62"
+rev = "9b7e16b9412ff6b7a55fac6b9c6a943b55ef3718"
 features = []
 
 [dependencies.eth-types]
 git = "https://github.com/scroll-tech/zkevm-circuits.git"
-rev = "b99974d2d37696562a1035c0e595dbc87fabaa62"
+rev = "9b7e16b9412ff6b7a55fac6b9c6a943b55ef3718"
 features = []
 
 [dependencies.external-tracer]
 git = "https://github.com/scroll-tech/zkevm-circuits.git"
-rev = "b99974d2d37696562a1035c0e595dbc87fabaa62"
+rev = "9b7e16b9412ff6b7a55fac6b9c6a943b55ef3718"
 features = []
 
 [dependencies.geth-utils]
 git = "https://github.com/scroll-tech/zkevm-circuits.git"
-rev = "b99974d2d37696562a1035c0e595dbc87fabaa62"
+rev = "9b7e16b9412ff6b7a55fac6b9c6a943b55ef3718"
 features = []
 
 [dependencies.halo2_proofs]
@@ -44,8 +44,14 @@ features = ["serde"]
 
 [dependencies.mock]
 git = "https://github.com/scroll-tech/zkevm-circuits.git"
-rev = "b99974d2d37696562a1035c0e595dbc87fabaa62"
+rev = "9b7e16b9412ff6b7a55fac6b9c6a943b55ef3718"
 features = []
+
+[dependencies.prover]
+git = "https://github.com/scroll-tech/zkevm-circuits.git"
+rev = "9b7e16b9412ff6b7a55fac6b9c6a943b55ef3718"
+features = ["parallel_syn", "scroll", "shanghai", "test"]
+optional = true
 
 [dependencies.serde]
 version = "1.0"
@@ -57,14 +63,17 @@ features = ["env-filter"]
 
 [dependencies.zkevm-circuits]
 git = "https://github.com/scroll-tech/zkevm-circuits.git"
-rev = "b99974d2d37696562a1035c0e595dbc87fabaa62"
+rev = "9b7e16b9412ff6b7a55fac6b9c6a943b55ef3718"
 features = ["test"]
 default-features = false
 
 [features]
-default = ["shanghai", "scroll"]
-scroll = ["bus-mapping/scroll", "eth-types/scroll", "external-tracer/scroll", "mock/scroll", "zkevm-circuits/scroll"]
-shanghai = ["bus-mapping/shanghai", "eth-types/shanghai", "mock/shanghai", "zkevm-circuits/shanghai"]
+chunk-prove = ["prover/test", "parallel_syn", "scroll", "shanghai"]
+default = ["parallel_syn", "shanghai", "scroll"]
+inner-prove = ["prover/test", "parallel_syn", "scroll", "shanghai"]
+parallel_syn = ["halo2_proofs/parallel_syn", "zkevm-circuits/parallel_syn", "prover?/parallel_syn"]
+scroll = ["bus-mapping/scroll", "eth-types/scroll", "external-tracer/scroll", "mock/scroll", "zkevm-circuits/scroll", "prover?/scroll"]
+shanghai = ["bus-mapping/shanghai", "eth-types/shanghai", "mock/shanghai", "zkevm-circuits/shanghai", "prover?/shanghai"]
 
 [patch.crates-io.ethers-core]
 git = "https://github.com/scroll-tech/ethers-rs.git"
