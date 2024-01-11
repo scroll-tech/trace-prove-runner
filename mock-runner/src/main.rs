@@ -35,7 +35,7 @@ impl BlockTest {
             mock::MOCK_DIFFICULTY_L2GETH.to_big_endian(&mut difficulty_be_bytes);
             std::env::set_var("DIFFICULTY", hex::encode(difficulty_be_bytes));
             let mut circuit_input_builder =
-                CircuitInputBuilder::new_from_l2_trace(circuits_params, &block_trace, false, false)
+                CircuitInputBuilder::new_from_l2_trace(circuits_params, block_trace, false, false)
                     .expect("could not handle block tx");
             circuit_input_builder
                 .finalize_building()
@@ -50,7 +50,7 @@ impl BlockTest {
             .unwrap();
             zkevm_circuits::witness::block_apply_mpt_state(
                 &mut block,
-                &circuit_input_builder.mpt_init_state,
+                &circuit_input_builder.mpt_init_state.as_ref().unwrap(),
             );
             block
         };
