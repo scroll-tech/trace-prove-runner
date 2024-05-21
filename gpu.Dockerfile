@@ -7,8 +7,7 @@ COPY worker /worker
 RUN cd /worker && cargo build --release
 COPY mock-runner /mock-runner
 RUN cd /mock-runner && \
-    cargo build --release --bin mock-runner && \
-    cp `find ./target/release/ | grep libzktrie.so` /usr/lib/
+    cargo build --release --bin mock-runner
 RUN apt update && apt install -y curl
 RUN mkdir /configs
 RUN curl -o /configs/layer1.config https://circuit-release.s3.us-west-2.amazonaws.com/release-v0.9.4/layer1.config
@@ -26,7 +25,6 @@ ENV RUNNER_PATH=/usr/local/bin/mock-runner
 ENV OUTPUT_PATH=/srv/tracetest/output
 COPY --from=builder /worker/target/release/worker /usr/local/bin/
 COPY --from=builder /mock-runner/target/release/mock-runner /usr/local/bin/
-COPY --from=builder /usr/lib/libzktrie.so /usr/lib/
 COPY --from=builder /configs/ /opt/configs/
 
 ENTRYPOINT ["/usr/local/bin/worker"]
