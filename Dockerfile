@@ -1,4 +1,4 @@
-FROM scrolltech/go-rust-builder:go-1.19-rust-nightly-2023-12-03 as builder
+FROM scrolltech/go-rust-builder:go-1.21-rust-nightly-2023-12-03 as builder
 
 COPY worker /worker
 RUN cd /worker && cargo build --release
