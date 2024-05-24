@@ -5,7 +5,6 @@ use crate::consts::*;
 use bus_mapping::circuit_input_builder::{CircuitInputBuilder, CircuitsParams};
 use clap::{Arg, ArgAction, Command};
 use eth_types::l2_types::BlockTrace;
-use halo2_proofs::halo2curves::bn256::Fr;
 use serde::Serialize;
 use std::fs;
 use std::path::PathBuf;
@@ -15,7 +14,7 @@ use zkevm_circuits::witness::Block;
 mod consts;
 
 pub struct BlockTest {
-    pub block: Block<Fr>,
+    pub block: Block,
     pub circuit_input_builder: CircuitInputBuilder,
 }
 
@@ -48,10 +47,7 @@ impl BlockTest {
                 &circuit_input_builder.code_db,
             )
             .unwrap();
-            zkevm_circuits::witness::block_apply_mpt_state(
-                &mut block,
-                &circuit_input_builder.mpt_init_state.as_ref().unwrap(),
-            );
+            block.apply_mpt_updates(&circuit_input_builder.mpt_init_state.as_ref().unwrap());
             block
         };
 
@@ -142,7 +138,8 @@ fn main() {
 }
 
 #[cfg(not(any(feature = "inner-prove", feature = "chunk-prove")))]
-fn mock_prove(k: u32, block: &Block<Fr>) -> ProveResult {
+fn mock_prove(k: u32, block: &Block) -> ProveResult {
+    use halo2_proofs::halo2curves::bn256::Fr;
     use zkevm_circuits::util::SubCircuit;
 
     let mut result = ProveResult::default();
@@ -169,7 +166,7 @@ fn mock_prove(k: u32, block: &Block<Fr>) -> ProveResult {
 }
 
 #[cfg(feature = "inner-prove")]
-fn inner_prove(test: &str, block: &Block<Fr>) -> ProveResult {
+fn inner_prove(test: &str, block: &Block) -> ProveResult {
     match panic_catch(|| prover::test::inner_prove(test, block)) {
         Ok(_) => ProveResult {
             success: true,
@@ -183,7 +180,7 @@ fn inner_prove(test: &str, block: &Block<Fr>) -> ProveResult {
 }
 
 #[cfg(feature = "chunk-prove")]
-fn chunk_prove(test: &str, block: &Block<Fr>) -> ProveResult {
+fn chunk_prove(test: &str, block: &Block) -> ProveResult {
     match panic_catch(|| prover::test::chunk_prove(test, block)) {
         Ok(_) => ProveResult {
             success: true,
